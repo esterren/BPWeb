@@ -14,7 +14,7 @@
     // Query the database
     //
     function queryDB(tx) {
-        tx.executeSql('SELECT * FROM WEIGHT', [], querySuccess, errorCB);
+        tx.executeSql('SELECT * FROM weight', [], querySuccess, errorCB);
     }
 
     // Query the success callback
