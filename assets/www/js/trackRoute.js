@@ -1,8 +1,8 @@
- document.addEventListener("deviceready", onDeviceReady, false);
+ //document.addEventListener("deviceready", onDeviceReady, false);
 
     // Cordova is ready
     //
-    function onDeviceReady() {
+    function onTrackRoute() {
         navigator.geolocation.getCurrentPosition(onSuccess, onError);
     }
 

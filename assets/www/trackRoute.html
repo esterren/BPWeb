@@ -4,37 +4,45 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Track Route</title>
 	
-	<script type="text/javascript" src="js/cordova-2.2.0.js"></script>
 	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCHpW6fI4muB6d9s6FmRZQaugk7R24xpak&sensor=false"></script>
-	<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
 
-	<script type="text/javascript">
+</head>
+<body>
+<div data-role="page" id="trackRoute">
+	<div data-role="header">
+		<h1>Track Route</h1>
+	</div>
+
+<!--script type="text/javascript">
 	// Wait for Cordova to load
     //
     //document.addEventListener("deviceready", onDeviceReady, false);
 	
- 	function onLoad(){
- 		console.log("Test Tracking");
- 		alert("test");
- 		//document.addEventListener("deviceready", onDeviceReady, false);
+ 	//function onLoad(){
+
+  		//document.addEventListener("deviceready", onDeviceReady, false);
  		//navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
- 	}
+ 	//}
  	
- 	//$(document).on('pageinit', '#pageid', function() { });
+
 	    // Cordova is ready
 	    //
-	    //function onDeviceReady() {
+	    
+
+	function onDeviceReady() {
 	    	
-	    //    navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
+	
 	    	
-	    //}
+		navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
+	    	
+	}
 
 	    
 	    // onSuccess Geolocation
 	    //
-	    function onSuccess(position) {
-	        var element = document.getElementById('geolocation');
-	        element.innerHTML = 'Latitude: '           + position.coords.latitude              + '<br />' +
+	function onSuccess(position) {
+	   var element = document.getElementById('geolocation');
+	      element.innerHTML = 'Latitude: '           + position.coords.latitude              + '<br />' +
 	                            'Longitude: '          + position.coords.longitude             + '<br />' +
 	                            'Altitude: '           + position.coords.altitude              + '<br />' +
 	                            'Accuracy: '           + position.coords.accuracy              + '<br />' +
@@ -50,19 +58,12 @@
 	        alert('code: '    + error.code    + '\n' +
 	                'message: ' + error.message + '\n');
 	    }
-	</script>
-	<link rel="stylesheet" href="jquery.mobile-1.2.0.min.css" />
-</head>
-<body onload="onLoad()">
-
-	<div data-role="header">
-		<h1>Track Route</h1>
-	</div>
-
+	</script-->
 	<p id="geolocation">Finding geolocation...</p>
 
 	<div data-role="footer" class="ui-bar">
 		<a href="index.html" data-role="button" data-icon="home">Return</a>
 	</div>
+</div>
 </body>
 </html>

@@ -35,7 +35,7 @@ function getWeightList_success(tx, results) {
     var len = results.rows.length;
     for (var i=0; i<len; i++) {
     	var weight = results.rows.item(i);
-		$('#weightList').append('<li>'+weight.value'</li>');
+		$('#weightList').append('<li>'+weight.value+'</li>');
 //		<a href="employeedetails.html?id=' + employee.id + '">' +
 //		'<img src="pics/' + employee.picture + '" class="list-icon"/>' +
 //		'<p class="line1">' + employee.firstName + ' ' + employee.lastName + '</p>' +
