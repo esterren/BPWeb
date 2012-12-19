@@ -3,7 +3,19 @@
     // Cordova is ready
     //
     function onTrackRoute() {
-        navigator.geolocation.getCurrentPosition(onSuccess, onError);
+	
+		 var latlng = new google.maps.LatLng(57.7973333, 12.0502107);
+            var myOptions = {
+                zoom: 8,
+                center: latlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+		var map = new google.maps.Map(document.getElementById("map_canvas"),myOptions);
+
+		//$('#map_canvas').gmap('addMarker', {'position': '57.7973333,12.0502107', 'bounds': true}).click(function() {
+     	//$('#map_canvas').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
+        //});
+        //navigator.geolocation.getCurrentPosition(onSuccess, onError);
     }
 
     // onSuccess Geolocation
@@ -18,6 +30,14 @@
                             'Heading: '            + position.coords.heading               + '<br />' +
                             'Speed: '              + position.coords.speed                 + '<br />' +
                             'Timestamp: '          +                                   position.timestamp          + '<br />';
+        
+        
+//	      $('#map_canvas').gmap('addMarker', {'position': position.coords.latitude+","+position.coords.longitude, 'bounds': true}).click(function() {
+//	    	$('#map_canvas').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
+//	      });        
+//        $('#map_canvas').gmap('addMarker', {'position': '57.7973333,12.0502107', 'bounds': true}).click(function() {
+//        	$('#map_canvas').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
+//        });
     }
 
     // onError Callback receives a PositionError object
