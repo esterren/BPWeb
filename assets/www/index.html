@@ -50,6 +50,10 @@
 		$('#basic_map').live('pageshow', function() {
 			$('#map_canvas').gmap('refresh');
 		});
+		
+		//$('#basic_map').live('pagebeforeshow',function(e,data){ 
+		//	$('#map_canvas').height($(window).height() - (10 + $('[data-role=header]').height() - $('[data-role=footer]').height())); 
+		//});
    	</script>
 
 </head>
@@ -95,7 +99,7 @@
 			<h1>Track Route</h1>
 		</div>
 		<div data-role="content">	
-			<div class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em;">
+			<div class="ui-bar-c ui-corner-all ui-shadow" style="padding:0.2em;">
 				<div id="map_canvas" style="height:350px;"></div>
 			</div>
 		</div>
