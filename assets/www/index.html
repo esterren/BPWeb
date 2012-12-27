@@ -11,7 +11,7 @@
 		<link rel="stylesheet" href="jquery.mobile-1.2.0.min.css" />
 		<script type="text/javascript" src="js/jquery.ui.map/jquery.ui.map.full.min.js"></script>
 		<script type="text/javascript" src="js/jquery.ui.map/jquery.ui.map.services.min.js"></script>
-
+		<script type="text/javascript" src="js/DB.js"></script>
 		<style>
 				.iwContainer {
 					width: 130px; 
@@ -21,8 +21,7 @@
 				} 
 		</style>
 		<script type="text/javascript">
-			var db;
-			var dbCreated = false;
+
 			
 			var cordovaLoaded = false;
 			
@@ -33,7 +32,8 @@
 				initDB();
 				
 			}
-			$('#weight_list').live('pageinit',initDB);
+			$('#home').live('pageinit',function(){initDB();});
+			$('#weight_list').live('pageinit',function(){test();});
 			//$(document).on('pageinit', '#trackRoute', function(){
 			//	onTrackRoute();	
 			//});
@@ -60,77 +60,7 @@
 			//	$('#map_canvas').height($(window).height() - (10 + $('[data-role=header]').height() - $('[data-role=footer]').height())); 
 			//});
 
-			function initDB() {
-				db = window.openDatabase("BodyPerformer", "1.0", "Body Performer DB", 200000);
-				if (dbCreated)
-					db.transaction(getWeightList, transaction_error);
-				else
-					db.transaction(populateDB, transaction_error, populateDB_success);
-			}
 
-			function transaction_error(tx, error) {
-				$('#busy').hide();
-				alert("Database Error: " + error);
-			}
-
-			function populateDB_success() {
-				dbCreated = true;
-				db.transaction(getWeightList, transaction_error);
-			}
-
-			function getWeightList(tx) {
-				var sql = "select w.id, w.value from weight w order by w.id";
-			//	var sql = "select e.id, e.firstName, e.lastName, e.title, e.picture, count(r.id) reportCount " + 
-			//				"from employee e left join employee r on r.managerId = e.id " +
-			//				"group by e.id order by e.lastName, e.firstName";
-				tx.executeSql(sql, [], getWeightList_success);
-			}
-
-			function getWeightList_success(tx, results) {
-				$('#busy').hide();
-				var len = results.rows.length;
-				for (var i=0; i<len; i++) {
-					var weight = results.rows.item(i);
-					
-					$('#weightList').append($('<li/>', {    //here appending `<li>`
-						'data-role': "list-divider"
-							}).append($('<a/>', {    //here appending `<a>` into `<li>`
-								'href': '#',
-							//    'data-transition': 'slide',
-								'text': weight.value
-							})));
-
-
-					
-					//$('#weightList').append('<li>'+weight.value+'</li>');
-			//		<a href="employeedetails.html?id=' + employee.id + '">' +
-			//		'<img src="pics/' + employee.picture + '" class="list-icon"/>' +
-			//		'<p class="line1">' + employee.firstName + ' ' + employee.lastName + '</p>' +
-			//		'<p class="line2">' + employee.title + '</p>' +
-			//		'<span class="bubble">' + employee.reportCount + '</span></a>
-				}
-				$('#weightList').listview('refresh');
-				db = null;
-			}
-
-			function populateDB(tx) {
-				$('#busy').show();
-				tx.executeSql('DROP TABLE IF EXISTS weight');
-				var sql = 
-					"CREATE TABLE IF NOT EXISTS weight ( "+
-					"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-					"value FLOAT)";
-				
-				//var sql = 
-				//	"CREATE TABLE IF NOT EXISTS weight ( "+
-				//	"id unique, " +
-				//	"value)";
-				tx.executeSql(sql);
-				tx.executeSql("INSERT INTO weight(id,value) VALUES(1,'81.4')");
-				tx.executeSql("INSERT INTO weight(id,value) VALUES(2,'80.9')");
-				tx.executeSql("INSERT INTO weight(id,value) VALUES(3,'80.4')");
-			 }
-			
 			
 
 		</script>
@@ -232,9 +162,9 @@
 			</div>
 
 			<div data-role="content">	
-				<div id="wrapper">
+				<!--div id="wrapper"-->
 					<ul id="weightList" data-role="listview" data-inset="true"></ul>
-				</div>
+				<!--/div-->
 
 				<div id="busy"/>Loading...</div>
 
