@@ -11,7 +11,8 @@
 		<link rel="stylesheet" href="jquery.mobile-1.2.0.min.css" />
 		<script type="text/javascript" src="js/jquery.ui.map/jquery.ui.map.full.min.js"></script>
 		<script type="text/javascript" src="js/jquery.ui.map/jquery.ui.map.services.min.js"></script>
-		<script type="text/javascript" src="js/DB.js"></script>
+		<script type="text/javascript" src="js/initDB.js"></script>
+		<script type="text/javascript" src="js/DB_weight.js"></script>
 		<style>
 				.iwContainer {
 					width: 130px; 
@@ -33,7 +34,14 @@
 				
 			}
 			$('#home').live('pageinit',function(){initDB();});
-			$('#weight_list').live('pageinit',function(){test();});
+			$('#weight_list').live('pageinit',function(){getWeightList();});
+			$("#weight_add").live('pageinit', function() {
+				document.changeWeightForm.submit.click(changeWeightForm());
+				
+				//$('#changeWeightForm').submit.click(changeWeightForm());
+			});
+			
+			
 			//$(document).on('pageinit', '#trackRoute', function(){
 			//	onTrackRoute();	
 			//});
@@ -102,7 +110,7 @@
 				<!--p id="geolocation">Finding geolocation...</p-->
 			</div>
 		</div>
-		
+<!--############################################-->		
 		<div id="basic_map" data-role="page">
 			<div data-role="header">
 				<h1>Track Route</h1>
@@ -116,6 +124,8 @@
 				<a href="#home" data-role="button" data-icon="home">Return</a>
 			</div>
 		</div>
+
+<!--############################################-->	
 		<div data-role="page" id="weight_add">
 
 			<div data-role="header">
@@ -143,7 +153,7 @@
 					</div-->
 					
 					<!--div data-role="fieldcontain"-->	
-						<input type="submit" id="changeWeightForm" value="Save Weight"/>
+						<input type="submit" value="Save Weight"/>
 					<!--/div-->
 				</form>
 			</div>
@@ -155,6 +165,7 @@
 
 		</div>
 		
+<!--############################################-->	
 		<div data-role="page" id="weight_list">
 
 			<div data-role="header">
