@@ -34,9 +34,13 @@
 				
 			}
 			$('#home').live('pageinit',function(){initDB();});
-			$('#weight_list').live('pageinit',function(){getWeightList();});
+			//$('#weight_list').on('pageinit',function(){getWeightList();});
+			$('#weight_list').live('pageshow',function(){getWeightList();});
 			$("#weight_add").live('pageinit', function() {
-				document.changeWeightForm.submit.click(changeWeightForm());
+				$("#changeWeightForm").submit(function(event){
+				
+				changeWeight();});
+				//document.changeWeightForm.submit.click(changeWeightForm());
 				
 				//$('#changeWeightForm').submit.click(changeWeightForm());
 			});

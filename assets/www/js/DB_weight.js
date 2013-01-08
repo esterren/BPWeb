@@ -14,10 +14,10 @@ function populateWeightTable(tx) {
 	//	"id unique, " +
 	//	"value)";
 	tx.executeSql(sql);
-	tx.executeSql("INSERT INTO "+tblWeightName+"(value) VALUES('81.4')");
+/* 	tx.executeSql("INSERT INTO "+tblWeightName+"(value) VALUES('81.4')");
 	tx.executeSql("INSERT INTO "+tblWeightName+"(value) VALUES('80.9')");
 	tx.executeSql("INSERT INTO "+tblWeightName+"(value) VALUES('80.4')");
-
+ */
 }
 
 // Query the database
@@ -60,10 +60,11 @@ function _getWeightList(tx) {
 
 function getWeightList_success(tx, results) {
 	$('#busy').hide();
+	$('#weightList').empty();
 	var len = results.rows.length;
 	for (var i=0; i<len; i++) {
 		var weight = results.rows.item(i);
-		
+
 		$('#weightList').append($('<li/>', {    //here appending `<li>`
 			//'data-role': "list-divider"
 				}).append($('<a/>', {    //here appending `<a>` into `<li>`
