@@ -21,7 +21,8 @@
 
     // onSuccess Geolocation
     //
-    function onSuccess(position) {
+    function onSuccessTracking(position) {
+		
         var element = document.getElementById('geolocation');
         element.innerHTML = 'Latitude: '           + position.coords.latitude              + '<br />' +
                             'Longitude: '          + position.coords.longitude             + '<br />' +
@@ -30,7 +31,7 @@
                             'Altitude Accuracy: '  + position.coords.altitudeAccuracy      + '<br />' +
                             'Heading: '            + position.coords.heading               + '<br />' +
                             'Speed: '              + position.coords.speed                 + '<br />' +
-                            'Timestamp: '          +                                   position.timestamp          + '<br />';
+                            'Timestamp: '          + position.timestamp						+ '<br />';
         
         
 //	      $('#map_canvas').gmap('addMarker', {'position': position.coords.latitude+","+position.coords.longitude, 'bounds': true}).click(function() {
@@ -43,7 +44,7 @@
 
     // onError Callback receives a PositionError object
     //
-    function onError(error) {
+    function onErrorTracking(error) {
         alert('code: '    + error.code    + '\n' +
                 'message: ' + error.message + '\n');
     }

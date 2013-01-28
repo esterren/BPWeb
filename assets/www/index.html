@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="js/jquery.ui.map/jquery.ui.map.services.min.js"></script>
 		<script type="text/javascript" src="js/initDB.js"></script>
 		<script type="text/javascript" src="js/DB_weight.js"></script>
+		<script type="text/javascript" src="js/trackRoute.js"></script>
 		<style>
 				.iwContainer {
 					width: 130px; 
@@ -27,10 +28,11 @@
 			var cordovaLoaded = false;
 			
 			document.addEventListener("deviceready", onDeviceReady, false);
-			
+			var watchID = null;
 			function onDeviceReady(){
 				cordovaLoaded = true;
 				initDB();
+
 				
 			}
 			$('#home').live('pageinit',function(){initDB();});
@@ -55,13 +57,19 @@
 			////////////////////////////////////////////////////////////
 			
 			$('#basic_map').live('pageinit', function() {
+				
+				/*
 				$('#map_canvas').gmap({'center': mobileDemo.center, 'zoom': mobileDemo.zoom, 'disableDefaultUI':true, 'callback': function() {
 					var self = this;
 					self.addMarker({'position': this.get('map').getCenter() }).click(function() {
 						self.openInfoWindow({ 'content': 'Hello World!' }, this);
 					});
 				}}); 
-				
+				*/
+			});
+			$('#test').live('pageinit', function(){
+				var options = { timeout: 1500, enableHighAccuracy: true };
+				watchID = navigator.geolocation.watchPosition(onSuccessTracking, onErrorTracking, options);
 			});
 			
 			$('#basic_map').live('pageshow', function() {
@@ -95,6 +103,11 @@
 						</a>
 					</li>
 					<li>
+						<a href="#test">
+							<img src="images/63-runner.png" alt="runner" class="ui-li-icon">Test
+						</a>
+					</li>
+					<li>
 						<a href="#weight_add">
 							<img src="images/138-scales.png" alt="scales" class="ui-li-icon">Change weight
 						</a>
@@ -122,6 +135,20 @@
 			<div data-role="content">	
 				<div class="ui-bar-c ui-corner-all ui-shadow" style="padding:0.5em;">
 					<div id="map_canvas" style="height:350px;"></div>
+				</div>
+			</div>
+			<div data-role="footer" class="ui-bar">
+				<a href="#home" data-role="button" data-icon="home">Return</a>
+			</div>
+		</div>
+<!--############################################-->		
+		<div id="test" data-role="page">
+			<div data-role="header">
+				<h1>Test</h1>
+			</div>
+			<div data-role="content">	
+				<div class="ui-bar-c ui-corner-all ui-shadow" style="padding:0.5em;">
+					<div id="geolocation"></div>
 				</div>
 			</div>
 			<div data-role="footer" class="ui-bar">
