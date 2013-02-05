@@ -57,7 +57,8 @@
 			////////////////////////////////////////////////////////////
 			
 			$('#basic_map').live('pageinit', function() {
-				
+				var options = { timeout: 1500, enableHighAccuracy: true };
+				watchID = navigator.geolocation.watchPosition(onSuccessTracking, onErrorTracking, options);
 				/*
 				$('#map_canvas').gmap({'center': mobileDemo.center, 'zoom': mobileDemo.zoom, 'disableDefaultUI':true, 'callback': function() {
 					var self = this;
@@ -137,7 +138,7 @@
 					<div id="map_canvas" style="height:350px;"></div>
 				</div>
 			</div>
-			<div data-role="footer" class="ui-bar">
+			<div data-role="footer" class="ui-bar" data-position="fixed">
 				<a href="#home" data-role="button" data-icon="home">Return</a>
 			</div>
 		</div>
@@ -151,7 +152,7 @@
 					<div id="geolocation"></div>
 				</div>
 			</div>
-			<div data-role="footer" class="ui-bar">
+			<div data-role="footer" class="ui-bar" data-position="fixed">
 				<a href="#home" data-role="button" data-icon="home">Return</a>
 			</div>
 		</div>
@@ -189,7 +190,7 @@
 				</form>
 			</div>
 			
-			<div data-role="footer" class="ui-bar">
+			<div data-role="footer" class="ui-bar" data-position="fixed">
 				<a href="#home" data-role="button" data-icon="home">Return</a>
 			</div>
 
@@ -211,7 +212,7 @@
 				<div id="busy"/>Loading...</div>
 
 			</div>
-			<div data-role="footer" class="ui-bar">
+			<div data-role="footer" class="ui-bar" data-position="fixed">
 				<a href="#home" data-role="button" data-icon="home">Return</a>
 			</div>
 

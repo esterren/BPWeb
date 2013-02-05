@@ -32,8 +32,18 @@
                             'Heading: '            + position.coords.heading               + '<br />' +
                             'Speed: '              + position.coords.speed                 + '<br />' +
                             'Timestamp: '          + position.timestamp						+ '<br />';
-        
-        
+        /* var myOptions = {
+                zoom: 12,
+                center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+        }; */
+		$('#map_canvas').gmap({'center': new google.maps.LatLng(position.coords.latitude, position.coords.longitude), 'zoom': 20, 'disableDefaultUI':true, 'callback': function() {
+			var self = this;
+			/* self.addMarker({'position': this.get('map').getCenter() }).click(function() {
+				self.openInfoWindow({ 'content': 'Hello World!' }, this);
+			}); */
+		}}); 
+		
 //	      $('#map_canvas').gmap('addMarker', {'position': position.coords.latitude+","+position.coords.longitude, 'bounds': true}).click(function() {
 //	    	$('#map_canvas').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
 //	      });        
