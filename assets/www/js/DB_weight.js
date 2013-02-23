@@ -7,7 +7,8 @@ function populateWeightTable(tx) {
 	var sql = 
 		"CREATE TABLE IF NOT EXISTS "+tblWeightName+" ( "+
 		"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-		"value FLOAT)";
+		"value FLOAT, " +
+		"date_added TIMESTAMP DEFAULT (datetime('now','localtime')))";
 	
 	//var sql = 
 	//	"CREATE TABLE IF NOT EXISTS weight ( "+
@@ -51,7 +52,7 @@ function _changeWeight(tx) {
 }
 
 function _getWeightList(tx) {
-	var sql = "select w.id, w.value from "+tblWeightName+" w order by w.id";
+	var sql = "select w.id, w.value, w.date_added from "+tblWeightName+" w order by w.date_added";
 //	var sql = "select e.id, e.firstName, e.lastName, e.title, e.picture, count(r.id) reportCount " + 
 //				"from employee e left join employee r on r.managerId = e.id " +
 //				"group by e.id order by e.lastName, e.firstName";
@@ -62,19 +63,26 @@ function getWeightList_success(tx, results) {
 	$('#busy').hide();
 	$('#weightList').empty();
 	var len = results.rows.length;
+	var lastDate;
 	for (var i=0; i<len; i++) {
 		var weight = results.rows.item(i);
 
-		$('#weightList').append($('<li/>', {    //here appending `<li>`
+/*		$('#weightList').append($('<li/>', {    //here appending `<li>`
 			//'data-role': "list-divider"
 				}).append($('<a/>', {    //here appending `<a>` into `<li>`
 					'href': '#',
 				//    'data-transition': 'slide',
 					'text': weight.value
 				})));
-
-
+*/
+		var newDate = new Date(weight.date_added);
 		
+		if(!lastDate || (newDate.getFullYear() != lastDate.getFullYear() && newDate.getMonth() != lastDate.getMonth() && newDate.getDate() != lastDate.getDate() )){
+			lastDate = newDate;
+			$('#weightList').append($('<li/>',{'data-role': "list-divider",'text': lastDate.toLocaleDateString()}));
+		}
+		
+		$('#weightList').append($('<li/>',{'text': weight.value+" kg"}));
 		//$('#weightList').append('<li>'+weight.value+'</li>');
 //		<a href="employeedetails.html?id=' + employee.id + '">' +
 //		'<img src="pics/' + employee.picture + '" class="list-icon"/>' +
