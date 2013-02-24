@@ -85,14 +85,36 @@ $("#startTracking_start").live('click', function(){
 	
 	var timestamp = new Date().toISOString();
 	var myTrack = new Track({label: track_id,timestamp: timestamp});
-		
+	var myTrackID = 0;
+	myTrack.save({
+			success: function(myTrack) {
+				myTrackID = myTrack.get("_id");
+				if(myTrackID != 0){
+					//alert("test");
+					trackPosition(myTrackID);
+				
+				}else{
+					alert("Unable to save!");
+				}
+			},
+			error: function(e) {
+				alert("Unable to save!");
+			}
+	});
 	// Start tracking the User
-    watchID = navigator.geolocation.watchPosition(
+
+    
+    
+
+});
+
+function trackPosition(myTrackID){
+	watchID = navigator.geolocation.watchPosition(
     
     	// Success
         function(position){
 			var myPosition = new Position({
-				
+					trackid: myTrackID,
 			        latitude: position.coords.latitude,
                     longitude: position.coords.longitude,
                     altitude: position.coords.altitude,
@@ -103,8 +125,15 @@ $("#startTracking_start").live('click', function(){
                     timestamp: position.timestamp
 			});
 
-			// 
-
+			myPosition.save({
+				success: function(t) {
+					
+				},
+				error: function(e) {
+					alert("Unable to save!");
+				}
+			});
+/*
 			var myRelTrackPos = new Kinvey.Entity({
 				track: myTrack,
 				position: myPosition
@@ -112,14 +141,15 @@ $("#startTracking_start").live('click', function(){
 			
 			
 			myRelTrackPos.save({
-			success: function(weight) {
-				//alert("success");
-			},
-			error: function(e) {
-				alert("Unable to save!");
-			}
-		});
+				success: function(weight) {
+					//alert("success");
+				},
+				error: function(e) {
+					alert("Unable to save!");
+				}
+			});
             //tracking_data.push(position);
+			*/
         },
         
         // Error
@@ -128,31 +158,24 @@ $("#startTracking_start").live('click', function(){
         },
         
         // Settings
-        { frequency: 3000, enableHighAccuracy: true });
-    
-    
-    $("#track_id").hide();
+        { frequency: 4000, enableHighAccuracy: true }
+	);
+	
+	$("#track_id").hide();
 	$("#tracklbl_id").hide();
     
     $("#startTracking_status").html("Tracking workout: <strong>" + track_id + "</strong>");
-});
+}
+
 
 
 $("#startTracking_stop").live('click', function(){
 	
 	// Stop tracking the user
 	if (watchID != null) {
-		alert("test");
 		navigator.geolocation.clearWatch(watchID);
 		watchID = null;
 	}
-	
-	// Save the tracking data
-	//window.localStorage.setItem(track_id, JSON.stringify(tracking_data));
-
-	// Reset watchID and tracking_data 
-	var watchID = null;
-	//var tracking_data = null;
 
 	// Tidy up the UI
 	$("#track_id").val("").show();
@@ -167,30 +190,33 @@ $('#workout_history_ui').live('pageshow',function(){
 	//$('#busy').hide();
 	$('#workoutList').empty();
 	
+	var myQuery = new Kinvey.Query();
+	myQuery.on('timestamp').sort(Kinvey.Query.DESC);
 	var myTracks = new Kinvey.Collection('track');
+	myTracks.setQuery(myQuery);
+	
 	myTracks.fetch({
 		success: function(list) {
-		var lastDate;
-		
-		for(var n=0; n<list.length; n++){
+			var lastDate;
 			
-			var label = list[n].get("label");
-			var newDate = new Date(list[n].get("timestamp"));
-			if(!lastDate || (newDate.getFullYear() != lastDate.getFullYear() || newDate.getMonth() != lastDate.getMonth() || newDate.getDate() != lastDate.getDate() )){
-				lastDate = newDate;
-				$('#workoutList').append($('<li/>',{'data-role': "list-divider",'text': lastDate.toLocaleDateString()}));
+			for(var n=0; n<list.length; n++){
+				
+				var label = list[n].get("label");
+				var newDate = new Date(list[n].get("timestamp"));
+				if(!lastDate || (newDate.getFullYear() != lastDate.getFullYear() || newDate.getMonth() != lastDate.getMonth() || newDate.getDate() != lastDate.getDate() )){
+					lastDate = newDate;
+					$('#workoutList').append($('<li/>',{'data-role': "list-divider",'text': lastDate.toLocaleDateString()}));
+				}
+				
+				//$('#workoutList').append($('<li/>',{'text': label}));
+				
+				$('#workoutList').append($('<li/>', {}).append($('<a/>', {    //here appending `<a>` into `<li>`
+						'href': "#workout_detail_ui?id="+list[n].get("_id"),
+						'text': label
+					})));
+				
 			}
-			
-			//$('#workoutList').append($('<li/>',{'text': label}));
-			
-			$('#workoutList').append($('<li/>', {}).append($('<a/>', {    //here appending `<a>` into `<li>`
-					'href': "#workout_detail_ui?id="+list[n].get("_id"),
-					'text': label
-				})));
-			
-		}
-		$('#workoutList').listview('refresh');
-		
+			$('#workoutList').listview('refresh');
 		
 		},
 		
@@ -204,77 +230,110 @@ $('#workout_history_ui').live('pageshow',function(){
 	
 });
 
-
-
-
+/*
 $("#workout_detail_ui").live("pagebeforeshow", function(e, data){
     if ($.mobile.pageData && $.mobile.pageData.id){
         console.log("Parameter id=" + $.mobile.pageData.id);
     }
 });
+*/
+$('#workout_detail_ui').live('pageshow',function(){
 
-
-
-
-//###############################################################
-
- //document.addEventListener("deviceready", onDeviceReady, false);
-
-    // Cordova is ready
-    //
-    function onTrackRoute() {
+	//alert($.mobile.pageData.id);
+	var myTrack = new Track();
+	var myTrackID = $.mobile.pageData.id;
+	myTrack.load(myTrackID,{
 	
-		//var latlng = new google.maps.LatLng(57.7973333, 12.0502107);
-        //var myOptions = {
-        //        zoom: 8,
-        //        center: latlng,
-        //        mapTypeId: google.maps.MapTypeId.ROADMAP
-        //    };
-		//var map = new google.maps.Map(document.getElementById("map_canvas"),myOptions);
-		var yourStartLatLng = new google.maps.LatLng(59.3426606750, 18.0736160278);
-        $('#map_canvas').gmap({'center': yourStartLatLng});
-		//$('#map_canvas').gmap('addMarker', {'position': '57.7973333,12.0502107', 'bounds': true}).click(function() {
-     	//$('#map_canvas').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
-        //});
-        //navigator.geolocation.getCurrentPosition(onSuccess, onError);
-    }
+		success: function(myTrack){
+			$("#trackdetail_lbl").text(myTrack.get("label"));
+			var starttime = new Date(myTrack.get("timestamp"));
+			var starttimeStr = starttime.toLocaleDateString() + "  " + starttime.getHours()+":"+starttime.getMinutes()+":"+starttime.getSeconds();
+			$("#trackdetail_starttime").text(starttimeStr);
+		},
+		error: function(e){
+			alert("Unable to Load Trackdetail");
+		}
+	
+	});
+	
+	var myQuery = new Kinvey.Query();
+	myQuery.on('trackid').equal(myTrackID);
+	myQuery.on('timestamp').sort(Kinvey.Query.ASC);
+	var myTrackPositions = new Kinvey.Collection('position');
+	myTrackPositions.setQuery(myQuery);
 
-    // onSuccess Geolocation
-    //
-    function onSuccessTracking(position) {
-		
-        var element = document.getElementById('geolocation');
-        element.innerHTML = 'Latitude: '           + position.coords.latitude              + '<br />' +
-                            'Longitude: '          + position.coords.longitude             + '<br />' +
-                            'Altitude: '           + position.coords.altitude              + '<br />' +
-                            'Accuracy: '           + position.coords.accuracy              + '<br />' +
-                            'Altitude Accuracy: '  + position.coords.altitudeAccuracy      + '<br />' +
-                            'Heading: '            + position.coords.heading               + '<br />' +
-                            'Speed: '              + position.coords.speed                 + '<br />' +
-                            'Timestamp: '          + position.timestamp						+ '<br />';
-        /* var myOptions = {
-                zoom: 12,
-                center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-        }; */
-		$('#map_canvas').gmap({'center': new google.maps.LatLng(position.coords.latitude, position.coords.longitude), 'zoom': 20, 'disableDefaultUI':true, 'callback': function() {
-			var self = this;
-			/* self.addMarker({'position': this.get('map').getCenter() }).click(function() {
-				self.openInfoWindow({ 'content': 'Hello World!' }, this);
-			}); */
-		}}); 
-		
-//	      $('#map_canvas').gmap('addMarker', {'position': position.coords.latitude+","+position.coords.longitude, 'bounds': true}).click(function() {
-//	    	$('#map_canvas').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
-//	      });        
-//        $('#map_canvas').gmap('addMarker', {'position': '57.7973333,12.0502107', 'bounds': true}).click(function() {
-//        	$('#map_canvas').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
-//        });
-    }
+	
+	myTrackPositions.fetch({
+		success: function(list) {
+			
+			// Calculate the total distance travelled
+			total_km = 0;
+			var t1 = list[0].get("timestamp");
+			var t2 = list[(list.length - 1)].get("timestamp");
+			var duration =  msToTime(t2 - t1);
+			var myPath =[];
+			$("#trackdetail_duration").text(duration);
+			
+			for(var n=0; n<list.length; n++){
+				
+				//$("#trackdetail_temp").append( n + " time: "+ list[n].get("timestamp") + "<br>"+n + " Lat: "+ list[n].get("latitude") + "<br>"+ n+" Long: " + list[n].get("longitude") + "<br>");
+				myPath.push(new google.maps.LatLng(list[n].get("latitude"), list[n].get("longitude")));
+	    		if(n < (list.length-1)){
+					total_km += gps_distance(list[n].get("latitude"), list[n].get("longitude"), list[n+1].get("latitude"), list[n+1].get("longitude"));
+				}
+				
+			}
+			total_km_rounded = total_km.toFixed(3);
+			$("#trackdetail_distance").text(total_km_rounded + " km");
+			//$('#workoutList').listview('refresh');
+			
+			
+			// Set the initial Lat and Long of the Google Map
+			var myFirstPosition = new google.maps.LatLng(list[0].get("latitude"), list[0].get("longitude"));
 
-    // onError Callback receives a PositionError object
-    //
-    function onErrorTracking(error) {
-        alert('code: '    + error.code    + '\n' +
-                'message: ' + error.message + '\n');
-    }
+			// Google Map options
+			var myOptions = {
+				streetViewControl: false,
+				zoom: 17,
+				center: myFirstPosition,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			};
+			
+			
+			// Create the Google Map, set options
+			var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+			
+			// Plot the GPS entries as a line on the Google Map
+			var trackPath = new google.maps.Polyline({
+			  path: myPath,
+			  strokeColor: "#FF0000",
+			  strokeOpacity: 1.0,
+			  strokeWeight: 2
+			});
+
+			// Apply the line to the map
+			trackPath.setMap(map);
+			
+		},
+		
+		error: function(e) {
+			alert("Unable to load the list!")
+
+		}
+	
+	});
+	
+	
+
+});
+
+function msToTime(s) {
+  var ms = s % 1000;
+  s = (s - ms) / 1000;
+  var secs = s % 60;
+  s = (s - secs) / 60;
+  var mins = s % 60;
+  var hrs = (s - mins) / 60;
+  // + '.' + ms
+  return hrs + 'h ' + mins + 'min' + secs +'sec';
+}
