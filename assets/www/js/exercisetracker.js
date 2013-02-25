@@ -113,6 +113,7 @@ function trackPosition(myTrackID){
     
     	// Success
         function(position){
+        		if(position.coords.accuracy<20){
 			var myPosition = new Position({
 					trackid: myTrackID,
 			        latitude: position.coords.latitude,
@@ -150,6 +151,7 @@ function trackPosition(myTrackID){
 			});
             //tracking_data.push(position);
 			*/
+        		}
         },
         
         // Error
@@ -308,7 +310,7 @@ $('#workout_detail_ui').live('pageshow',function(){
 			  path: myPath,
 			  strokeColor: "#FF0000",
 			  strokeOpacity: 1.0,
-			  strokeWeight: 2
+			  strokeWeight: 3
 			});
 
 			// Apply the line to the map
