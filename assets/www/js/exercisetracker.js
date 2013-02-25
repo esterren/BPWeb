@@ -275,13 +275,16 @@ $('#workout_detail_ui').live('pageshow',function(){
 			var duration =  msToTime(t2 - t1);
 			var myPath =[];
 			$("#trackdetail_duration").text(duration);
-			
+			var myBounds = new google.maps.LatLngBounds();
 			for(var n=0; n<list.length; n++){
-				
+				var myLat = list[n].get("latitude");
+				var myLng = list[n].get("longitude");
+				var myLatLng = new google.maps.LatLng(myLat,myLng);
 				//$("#trackdetail_temp").append( n + " time: "+ list[n].get("timestamp") + "<br>"+n + " Lat: "+ list[n].get("latitude") + "<br>"+ n+" Long: " + list[n].get("longitude") + "<br>");
-				myPath.push(new google.maps.LatLng(list[n].get("latitude"), list[n].get("longitude")));
+				myPath.push(myLatLng);
+				myBounds.extend(myLatLng);
 	    		if(n < (list.length-1)){
-					total_km += gps_distance(list[n].get("latitude"), list[n].get("longitude"), list[n+1].get("latitude"), list[n+1].get("longitude"));
+					total_km += gps_distance(myLat, myLng, list[n+1].get("latitude"), list[n+1].get("longitude"));
 				}
 				
 			}
@@ -310,12 +313,12 @@ $('#workout_detail_ui').live('pageshow',function(){
 			  path: myPath,
 			  strokeColor: "#FF0000",
 			  strokeOpacity: 1.0,
-			  strokeWeight: 3
+			  strokeWeight: 4
 			});
 
 			// Apply the line to the map
 			trackPath.setMap(map);
-			
+			map.fitBounds(myBounds);
 		},
 		
 		error: function(e) {
