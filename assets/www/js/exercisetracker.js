@@ -1,6 +1,8 @@
 var watchID = null;
 var track_id = ''; 
-
+var myOptions = null;
+var trackPath = null;
+var myBounds = null;
 var Position = Kinvey.Entity.extend({
 	// Overwrite the constructor to automatically link all instances to the events collection.
 	constructor: function(attributes) {
@@ -243,7 +245,13 @@ $('#workout_detail_ui').live('pageshow',function(){
 
 	//alert($.mobile.pageData.id);
 	var myTrack = new Track();
+	if ($.mobile.pageData== null){
+		return;
+	}
 	var myTrackID = $.mobile.pageData.id;
+	if(myTrackID == null){
+		return;
+	}
 	myTrack.load(myTrackID,{
 	
 		success: function(myTrack){
@@ -270,15 +278,29 @@ $('#workout_detail_ui').live('pageshow',function(){
 			
 			// Calculate the total distance travelled
 			total_km = 0;
+			max_speed=0;
+			max_altitude = min_altitude=list[0].get("altitude");
 			var t1 = list[0].get("timestamp");
 			var t2 = list[(list.length - 1)].get("timestamp");
 			var duration =  msToTime(t2 - t1);
 			var myPath =[];
 			$("#trackdetail_duration").text(duration);
-			var myBounds = new google.maps.LatLngBounds();
+			myBounds = new google.maps.LatLngBounds();
 			for(var n=0; n<list.length; n++){
+
+				var myMaxSpeed = list[n].get("speed");
+				if(myMaxSpeed != null && myMaxSpeed > max_speed){
+					max_speed = myMaxSpeed;
+				}
+				
+				var myAltitude = list[n].get("altitude");
+				if(myAltitude < min_altitude){
+					min_altitude = myAltitude;
+				}else if(myAltitude>max_altitude){
+					max_altitude = myAltitude;
+				}
 				var myLat = list[n].get("latitude");
-				var myLng = list[n].get("longitude");
+				var myLng = list[n].get("longitude");				
 				var myLatLng = new google.maps.LatLng(myLat,myLng);
 				//$("#trackdetail_temp").append( n + " time: "+ list[n].get("timestamp") + "<br>"+n + " Lat: "+ list[n].get("latitude") + "<br>"+ n+" Long: " + list[n].get("longitude") + "<br>");
 				myPath.push(myLatLng);
@@ -289,7 +311,14 @@ $('#workout_detail_ui').live('pageshow',function(){
 				
 			}
 			total_km_rounded = total_km.toFixed(3);
+			max_speed = max_speed * 3.6;
+			max_speed_rounded = max_speed.toFixed(2);
+			min_altitude_rounded = min_altitude.toFixed(0);
+			max_altitude_rounded = max_altitude.toFixed(0);
 			$("#trackdetail_distance").text(total_km_rounded + " km");
+			$("#trackdetail_top_speed").text(max_speed_rounded+ " km/h");
+			$("#trackdetail_max_altitude").text(max_altitude_rounded + " m");
+			$("#trackdetail_min_altitude").text(min_altitude_rounded  + " m");
 			//$('#workoutList').listview('refresh');
 			
 			
@@ -297,7 +326,7 @@ $('#workout_detail_ui').live('pageshow',function(){
 			var myFirstPosition = new google.maps.LatLng(list[0].get("latitude"), list[0].get("longitude"));
 
 			// Google Map options
-			var myOptions = {
+			myOptions = {
 				streetViewControl: false,
 				zoom: 17,
 				center: myFirstPosition,
@@ -305,20 +334,15 @@ $('#workout_detail_ui').live('pageshow',function(){
 			};
 			
 			
-			// Create the Google Map, set options
-			var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 			
 			// Plot the GPS entries as a line on the Google Map
-			var trackPath = new google.maps.Polyline({
+			trackPath = new google.maps.Polyline({
 			  path: myPath,
 			  strokeColor: "#FF0000",
 			  strokeOpacity: 1.0,
 			  strokeWeight: 4
 			});
 
-			// Apply the line to the map
-			trackPath.setMap(map);
-			map.fitBounds(myBounds);
 		},
 		
 		error: function(e) {
@@ -332,6 +356,19 @@ $('#workout_detail_ui').live('pageshow',function(){
 
 });
 
+$('#workout_detail_map_ui').live('pageshow',function(){
+
+	// Create the Google Map, set options
+	var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+	// Apply the line to the map
+	trackPath.setMap(map);
+	map.fitBounds(myBounds);
+
+
+});
+
+
 function msToTime(s) {
   var ms = s % 1000;
   s = (s - ms) / 1000;
@@ -340,5 +377,5 @@ function msToTime(s) {
   var mins = s % 60;
   var hrs = (s - mins) / 60;
   // + '.' + ms
-  return hrs + 'h ' + mins + 'min' + secs +'sec';
+  return hrs + 'h ' + mins + 'min ' + secs +'sec';
 }

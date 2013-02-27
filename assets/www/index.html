@@ -168,21 +168,65 @@
 <!--############################################-->	
 		<div data-role="page" id="workout_detail_ui">
 
-			<div data-role="header">
+			<div data-role="header" data-position="fixed">
 				<h1>Workout Detail</h1>
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#" class="ui-btn-active ui-state-persist">List</a></li>
+						<li><a href="#workout_detail_map_ui">Map</a></li>
+						<!--li><a href="#">Chart</a></li-->
+					</ul>
+				</div><!-- /navbar -->
+
 			</div>
 
 			<div data-role="content">	
 					<!--label id="trackdatail_lbl" for="trackdatail_id">Workout Lable:</label-->
-					<b>Workout Label: </b><span id="trackdetail_lbl"></span><br>
-					<b>Start time: </b><span id="trackdetail_starttime"></span><br>
-					<b>Distance: </b><span id="trackdetail_distance"></span><br>
-					<b>Duration: </b><span id="trackdetail_duration"></span><br>
-					<div id="trackdetail_temp"></div>
-					<div id="map_canvas" style="height:400px;"></div>
+					
+				<ul data-role="listview" data-inset="true" class="ui-listview">
+					<li data-role="list-divider">Workout Label:</li>
+					<li><span id="trackdetail_lbl"></span></li>
+					<li data-role="list-divider">Start Time:</li>
+					<li><span id="trackdetail_starttime"></span></li>
+					<li data-role="list-divider">Distance:</li>
+					<li><span id="trackdetail_distance"></span></li>
+					<li data-role="list-divider">Duration:</li>
+					<li><span id="trackdetail_duration"></span></li>
+					<li data-role="list-divider">Top Speed:</li>
+					<li><span id="trackdetail_top_speed"></span></li>
+					<li data-role="list-divider">Max. Altitude:</li>
+					<li><span id="trackdetail_max_altitude"></span></li>
+					<li data-role="list-divider">Min. Altitude:</li>
+					<li><span id="trackdetail_min_altitude"></span></li>
+				</ul>
+				<!--div id="map_canvas" style="height:400px;"></div-->
 					
 			</div>
-			<div data-role="footer" class="ui-bar" data-position="fixed">
+			<div data-role="footer" class="ui-bar" data-position="fixed" data-tap-toggle="false">
+				<a href="#workout_history_ui" data-role="button" data-icon="arrow-l">Back</a>
+			</div>
+
+		
+		</div>		
+<!--############################################-->	
+		<div data-role="page" id="workout_detail_map_ui">
+
+			<div data-role="header" data-position="fixed">
+				<h1>Workout Detail</h1>
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#workout_detail_ui">List</a></li>
+						<li><a href="#"  class="ui-btn-active ui-state-persist">Map</a></li>
+						<!--li><a href="#">Chart</a></li-->
+					</ul>
+				</div><!-- /navbar -->
+			</div>
+
+			<div data-role="content">	
+				<div id="map_canvas" style="height:600px;"></div>
+					
+			</div>
+			<div data-role="footer" class="ui-bar" data-position="fixed" data-tap-toggle="false">
 				<a href="#workout_history_ui" data-role="button" data-icon="arrow-l">Back</a>
 			</div>
 
